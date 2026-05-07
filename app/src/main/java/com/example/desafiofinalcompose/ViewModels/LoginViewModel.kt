@@ -1,0 +1,239 @@
+package com.example.loginfirebase_25_26
+
+import android.content.Context
+import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
+import kotlinx.coroutines.flow.MutableStateFlow
+import android.util.Log
+import androidx.lifecycle.viewModelScope
+import com.example.desafiofinalcompose.DatosCompartidos
+import com.example.desafiofinalcompose.Models.Usuario
+import com.example.desafiofinalcompose.R
+import com.example.desafiofinalcompose.RepositorioUsuarios
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+
+
+class LoginViewModel : ViewModel() {
+
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val repo = RepositorioUsuarios()
+    val TAG = "Oscar"
+
+    val isLoading = MutableStateFlow(false)
+    val loginSuccess = MutableStateFlow(false)
+    val errorMessage = MutableStateFlow<String?>(null)
+
+    val isGoogleLogin = MutableStateFlow(false)
+
+    val isUserLoggedIn: Boolean
+        get() = auth.currentUser != null
+    fun registrarUsuarioAdmin(
+        email: String,
+        password: String,
+        nombre: String,
+        rol: Int,
+        onSuccess: () -> Unit,
+        onError: () -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                repo.registrarUsuarioAdmin(
+                    email, password, nombre, rol
+                )
+                onSuccess()
+            } catch (e: Exception) {
+                onError()
+            }
+        }
+    }
+    fun loginWithEmail(email: String, password: String) {
+
+        isLoading.value = true
+        errorMessage.value = null
+        loginSuccess.value = false
+
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+
+                    val user = FirebaseAuth.getInstance().currentUser
+
+                    if (user != null) {
+
+                        val db = FirebaseFirestore.getInstance()
+                        db.collection("usuarios")
+                            .document(user.uid)
+                            .get()
+                            .addOnSuccessListener { document ->
+
+                                if (document.exists()) {
+
+                                    val usuario = document.toObject(Usuario::class.java)
+
+                                    if (usuario != null) {
+
+                                        DatosCompartidos.usuario = usuario
+                                        loginSuccess.value = true
+                                        Log.d("Debug Rol",document.data.toString())
+                                    } else {
+                                        errorMessage.value = "Error al parsear usuario"
+                                    }
+
+                                } else {
+                                    errorMessage.value = "Usuario no existe en Firestore"
+                                }
+
+                                isLoading.value = false
+                            }
+                            .addOnFailureListener {
+                                errorMessage.value = "Error al obtener usuario"
+                                isLoading.value = false
+                            }
+
+                    } else {
+                        errorMessage.value = "Usuario null"
+                        isLoading.value = false
+                    }
+
+                } else {
+                    errorMessage.value = "Error en login"
+                    isLoading.value = false
+                }
+            }
+    }
+
+    fun registerWithEmail(email: String, password: String, nombre: String, fotoUrl: String,rol:Int) {
+        isLoading.value = true
+        errorMessage.value = null
+
+        viewModelScope.launch {
+            try {
+                repo.registrarUsuario(email, password, nombre,rol)
+
+                isLoading.value = false
+                isGoogleLogin.value = false
+                loginSuccess.value = true
+
+            } catch (e: Exception) {
+                isLoading.value = false
+                errorMessage.value = e.message
+            }
+        }
+    }
+
+    fun loginWithGoogle(idToken: String) {
+
+        if (idToken.isEmpty()) return
+
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+
+                    val user = auth.currentUser
+
+                    if (user != null) {
+
+                        Log.d("LOGIN", "UID: ${user.uid}")
+
+                        viewModelScope.launch {
+                            repo.registraGmailAutentificado(
+                                uid = user.uid,
+                                nombre = user.displayName ?: "",
+                                email = user.email ?: "",
+                                rol = 2
+                            )
+                        }
+
+                        DatosCompartidos.usuario = Usuario(
+                            id = user.uid,
+                            nombre = user.displayName ?: "",
+                            email = user.email ?: "",
+                            rol = 2
+                        )
+
+                        Log.d("LOGIN", "USUARIO GUARDADO: ${DatosCompartidos.usuario?.id}")
+                    }
+
+                } else {
+                    Log.e("LOGIN", "Error: ${task.exception?.message}")
+                }
+            }
+    }
+
+    fun signOut(context: Context) {
+        auth.signOut()
+        // Si el usuario se logueó con Google, cierra sesión y revoca acceso
+        if (isGoogleLogin.value) {
+            val googleSignInClient = com.google.android.gms.auth.api.signin.GoogleSignIn.getClient(
+                context,
+                com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder(
+                    com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN
+                )
+                    .requestIdToken(context.getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build()
+            )
+
+            googleSignInClient.signOut().addOnCompleteListener {
+                Log.d(TAG, "Google Sign-Out completado")
+            }
+
+            googleSignInClient.revokeAccess().addOnCompleteListener {
+                Log.d(TAG, "Google Access revocado")
+            }
+        }
+
+        // Reiniciar estados del ViewModel
+        loginSuccess.value = false
+        errorMessage.value = null
+        isLoading.value = false
+        isGoogleLogin.value = false
+        DatosCompartidos.usuario = null
+
+    }
+}
+
+
+/*
+** LiveData
+    Ventajas
+
+        Muy estable y probado: funciona con Activities, Fragments y Compose.
+
+        Funciona automáticamente con el ciclo de vida (observe respeta LifecycleOwner).
+
+        Fácil de usar si tu app todavía mezcla XML + Compose.
+
+    Desventajas
+
+        No tan flexible para flows de datos reactivos.
+
+        Manejo de coroutines menos natural.
+
+        Para Compose, necesitas observeAsState() cada vez que quieres usarlo como State.
+
+
+** StateFlow / MutableStateFlow (o SharedFlow)
+    Ventajas
+
+        Integración nativa con Compose: collectAsState() convierte un StateFlow en State automáticamente.
+
+        Funciona muy bien con coroutines, lo que hace más fácil manejar loading, errores o eventos.
+
+        Evita problemas de “duplicación de eventos” que a veces tienes con LiveData (como Toast que se dispara varias veces al recomponer).
+
+    Desventajas
+
+        Necesitas un scope de coroutine para colectar.
+
+        No tiene “respetar lifecycle” automático como LiveData: si quieres observar desde un Fragment/Activity, necesitas lifecycleScope.launchWhenStarted o similar.
+ */

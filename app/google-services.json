@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "576042519189",
+    "project_id": "restaurante-17955",
+    "storage_bucket": "restaurante-17955.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:576042519189:android:6e8b69b31de09a1833699c",
+        "android_client_info": {
+          "package_name": "com.example.desafiofinalcompose"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "576042519189-5fvoem8ejv7tj7ohkaftmtpt59p7f1r9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.desafiofinalcompose",
+            "certificate_hash": "a977be83c4310e83039564ebbca21821c36cb90b"
+          }
+        },
+        {
+          "client_id": "576042519189-gmi61tatsmtkffu65t3a92b39vnr896m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbO0E5rWM3g11qSd0yvvaC-J_M6xyli0U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "576042519189-gmi61tatsmtkffu65t3a92b39vnr896m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
