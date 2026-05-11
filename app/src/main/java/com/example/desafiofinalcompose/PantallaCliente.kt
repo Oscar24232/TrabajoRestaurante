@@ -41,6 +41,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import com.example.desafiofinalcompose.ItemsCard.ItemProducto
+import com.example.desafiofinalcompose.ItemsCard.listaProductos
 import com.example.desafiofinalcompose.ViewModels.ClienteViewModel
 import com.example.desafiofinalcompose.ViewModels.ClienteListasViewModel
 import com.example.desafiofinalcompose.ViewModels.ComandaViewModel
@@ -140,37 +141,18 @@ fun PantallaCliente(navController: NavHostController) {
             ) {
 
                 item {
-                    Text(
-                        "Platos",
-                        fontSize = 20.sp,
-                        color = Color(0xFFF84F19),
-                        modifier = Modifier.padding(8.dp)
+                    listaProductos(
+                        titulo = "Platos",
+                        productos = platos,
+                        viewModelClient = viewModelClient
                     )
                 }
 
-                items(platos) { producto ->
-                    ItemProducto(
-                        producto = producto,
-                        comanda = viewModelClient.comanda,
-                        onAdd = viewModelClient::añadirProducto,
-                        onRemove = viewModelClient::quitarProducto
-                    )
-                }
                 item {
-                    Text(
-                        "Bebidas",
-                        fontSize = 20.sp,
-                        color = Color(0xFFF84F19),
-                        modifier = Modifier.padding(8.dp)
-                    )
-                }
-
-                items(bebidas) { producto ->
-                    ItemProducto(
-                        producto = producto,
-                        comanda = viewModelClient.comanda,
-                        onAdd = viewModelClient::añadirProducto,
-                        onRemove = viewModelClient::quitarProducto
+                    listaProductos(
+                        titulo = "Bebidas",
+                        productos = bebidas,
+                        viewModelClient = viewModelClient
                     )
                 }
             }
