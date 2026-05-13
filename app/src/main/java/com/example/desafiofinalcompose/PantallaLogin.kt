@@ -138,7 +138,6 @@ fun PantallaLogin(navController: NavHostController) {
                             Toast.makeText(context, "Rellena los campos", Toast.LENGTH_SHORT).show()
                         } else {
                             viewModel.loginWithEmail(email, password)
-                            navController.navigate(Rutas.pantallaHome)
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),colors = ButtonDefaults.buttonColors(

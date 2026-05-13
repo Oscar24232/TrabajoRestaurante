@@ -35,6 +35,12 @@ class MainActivity : ComponentActivity() {
                     composable(Rutas.pantallaHome) {
                         PantallaHome(navController)
                     }
+                    composable(Rutas.pantallaAdmin) {
+                        PantallaAdmin(navController)
+                    }
+                    composable(Rutas.pantallaCliente) {
+                        PantallaCliente(navController)
+                    }
 
                 }
             }
