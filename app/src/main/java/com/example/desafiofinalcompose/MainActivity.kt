@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.borrame.ui.home.PantallaMaps
 import com.example.desafiofinalcompose.ui.theme.DesafioFinalComposeTheme
 
 
@@ -41,7 +42,9 @@ class MainActivity : ComponentActivity() {
                     composable(Rutas.pantallaCliente) {
                         PantallaCliente(navController)
                     }
-
+                    composable(Rutas.pantallaMapa) {
+                        PantallaMaps(navController)
+                    }
                 }
             }
         }
