@@ -101,15 +101,12 @@ fun PantallaCliente(navController: NavHostController) {
                             onClick = {
                                 expandir
                                 viewModelLogin.signOut(context)
-                                navController.navigate(Rutas.pantallaLogin) {
-                                    //
-                                }
+                                navController.navigate(Rutas.pantallaLogin)
                             }
                         )
                         DropdownMenuItem(
                             text = { Text("Historial Comandas") },
-                            onClick = {
-                                expandir
+                            onClick = { expandir
                                 navController.navigate(Rutas.pantallaHistorial)
 
                             }

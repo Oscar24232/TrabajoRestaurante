@@ -45,6 +45,12 @@ class MainActivity : ComponentActivity() {
                     composable(Rutas.pantallaMapa) {
                         PantallaMaps(navController)
                     }
+                    composable(Rutas.pantallaCrearProducto) {
+                        PantallaCrearProducto(navController)
+                    }
+                    composable(Rutas.pantallaHistorial) {
+                        historicoComandas(navController)
+                    }
                 }
             }
         }
