@@ -6,7 +6,7 @@ import com.example.desafiofinalcompose.Models.Producto
 import com.example.desafiofinalcompose.Models.ProductoCantidad
 import kotlin.collections.indexOfFirst
 
-class ClienteViewModel : ViewModel() {
+class CamareroViewModel : ViewModel() {
 
     var comanda = mutableStateListOf<ProductoCantidad>()
 

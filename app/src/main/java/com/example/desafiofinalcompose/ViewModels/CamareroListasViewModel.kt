@@ -6,7 +6,7 @@ import com.example.desafiofinalcompose.Models.Producto
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlin.jvm.java
 
-class ClienteListasViewModel: ViewModel() {
+class CamareroListasViewModel: ViewModel() {
     var productos = mutableStateListOf<Producto>()
 
     fun cargarProductos() {
