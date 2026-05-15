@@ -8,13 +8,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.desafiofinalcompose.Models.Producto
-import com.example.desafiofinalcompose.ViewModels.ClienteViewModel
+import com.example.desafiofinalcompose.ViewModels.CamareroViewModel
 
 @Composable
 fun listaProductos(
     titulo: String,
     productos: List<Producto>,
-    viewModelClient: ClienteViewModel
+    viewModelClient: CamareroViewModel
 ) {
 
     Text(

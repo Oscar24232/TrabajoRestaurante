@@ -39,8 +39,8 @@ class MainActivity : ComponentActivity() {
                     composable(Rutas.pantallaAdmin) {
                         PantallaAdmin(navController)
                     }
-                    composable(Rutas.pantallaCliente) {
-                        PantallaCliente(navController)
+                    composable(Rutas.pantallaCamarero) {
+                        PantallaCamarero(navController)
                     }
                     composable(Rutas.pantallaMapa) {
                         PantallaMaps(navController)
@@ -50,6 +50,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(Rutas.pantallaHistorial) {
                         historicoComandas(navController)
+                    }
+                    composable(Rutas.pantallaCliente) {
+                        PantallaCliente(navController)
                     }
                 }
             }
