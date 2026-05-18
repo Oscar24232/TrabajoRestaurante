@@ -1,5 +1,6 @@
 package com.example.desafiofinalcompose
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -44,9 +45,15 @@ fun historicoComandas(navController: NavHostController,rol:Int) {
 
     val viewModel: HistorialViewModel = viewModel()
     val comandas by viewModel.comandas.collectAsState()
-    LaunchedEffect(Unit) {
-        if (rol==4) viewModel.cargarComandasUsuario()
-        else viewModel.cargarComandas()
+
+
+    if (rol == 4) {
+
+        viewModel.cargarComandasUsuario()
+
+    } else {
+
+        viewModel.cargarComandas()
     }
 
     Scaffold(
