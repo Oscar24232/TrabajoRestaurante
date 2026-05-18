@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
@@ -37,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.desafiofinalcompose.ItemsCard.ItemCardCliente
 import com.example.desafiofinalcompose.ItemsCard.listaProductos
 import com.example.desafiofinalcompose.ViewModels.CamareroViewModel
 import com.example.desafiofinalcompose.ViewModels.CamareroListasViewModel
@@ -53,17 +56,24 @@ import kotlin.text.lowercase
 fun PantallaCamarero(navController: NavHostController) {
 
     var expandir by remember { mutableStateOf(false) }
+
     val viewModelLogin: LoginViewModel = viewModel()
     val viewModelClient: CamareroViewModel = viewModel()
     val viewModelListas: CamareroListasViewModel = viewModel()
     val viewModelComanda: ComandaViewModel = viewModel()
+
+    val listaCliente = viewModelListas.listaClientes
+
     val lat = DatosCompartidos.lat
     val lng = DatosCompartidos.lng
+
     val context = LocalContext.current
+
     LaunchedEffect(Unit) {
+
+        viewModelListas.cargarClientes()
         viewModelListas.cargarProductos()
     }
-
 
     val platos = viewModelListas.productos.filter {
         it.tipo.lowercase() == "plato"
@@ -73,52 +83,93 @@ fun PantallaCamarero(navController: NavHostController) {
         it.tipo.lowercase() == "bebida"
     }
 
-
     val total = viewModelClient.comanda.sumOf {
         it.precio * it.cantidad
     }
 
     Scaffold(
+
         topBar = {
+
             TopAppBar(
-                title = { Text("Camarero") },
+
+                title = {
+                    Text("Camarero")
+                },
+
                 actions = {
 
-                    IconButton(onClick = { expandir = true }) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "Menu")
+                    IconButton(
+                        onClick = {
+                            expandir = true
+                        }
+                    ) {
+
+                        Icon(
+                            Icons.Default.MoreVert,
+                            contentDescription = "Menu"
+                        )
                     }
 
                     DropdownMenu(
+
                         expanded = expandir,
-                        onDismissRequest = { expandir = false }
+
+                        onDismissRequest = {
+                            expandir = false
+                        }
+
                     ) {
+
                         DropdownMenuItem(
-                            text = { Text("Cerrar sesión") },
+
+                            text = {
+                                Text("Cerrar sesión")
+                            },
+
                             onClick = {
-                                expandir
+
+                                expandir = false
+
                                 viewModelLogin.signOut(context)
-                                navController.navigate(Rutas.pantallaLogin)
+
+                                navController.navigate(
+                                    Rutas.pantallaLogin
+                                )
                             }
                         )
-                        DropdownMenuItem(
-                            text = { Text("Historial Comandas") },
-                            onClick = { expandir
-                                navController.navigate(Rutas.pantallaHistorial)
 
+                        DropdownMenuItem(
+
+                            text = {
+                                Text("Historial Comandas")
+                            },
+
+                            onClick = {
+
+                                expandir = false
+
+                                navController.navigate(
+                                    Rutas.pantallaHistorial
+                                )
                             }
                         )
                     }
                 }
             )
         }
+
     ) { padding ->
 
         Column(
+
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
                 .background(
+
                     Brush.verticalGradient(
+
                         listOf(
                             Color.Black,
                             Color.Black,
@@ -128,30 +179,65 @@ fun PantallaCamarero(navController: NavHostController) {
                 )
         ) {
 
+            LazyRow(
+
+                modifier = Modifier.fillMaxWidth()
+
+            ) {
+
+                items(listaCliente) { cliente ->
+
+                    ItemCardCliente(
+
+                        usuario = cliente,
+
+                        seleccionado = DatosCompartidos.usuarioEditado?.id == cliente.id,
+
+                        onClick = {
+
+                            DatosCompartidos.usuarioEditado = cliente
+                        }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
 
             LazyColumn(
                 modifier = Modifier.weight(1f)
             ) {
 
                 item {
+
                     listaProductos(
+
                         titulo = "Platos",
+
                         productos = platos,
-                        viewModelClient = viewModelClient
+
+                        viewModelClient = viewModelClient,
+
+                        habilitarBotones = true
                     )
                 }
 
                 item {
+
                     listaProductos(
+
                         titulo = "Bebidas",
+
                         productos = bebidas,
-                        viewModelClient = viewModelClient
+
+                        viewModelClient = viewModelClient,
+
+                        habilitarBotones = true
                     )
                 }
             }
 
-            // COMANDA
             Column(
+
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.Black)
@@ -159,65 +245,141 @@ fun PantallaCamarero(navController: NavHostController) {
             ) {
 
                 Text(
-                    "Tu pedido",
+
+                    "Cliente seleccionado",
+
                     color = Color(0xFFF84F19),
+
+                    fontSize = 18.sp
+                )
+
+                Text(
+
+                    text = DatosCompartidos.usuarioEditado?.nombre
+                        ?: "Ningún cliente seleccionado",
+
+                    color = Color.White,
+
+                    fontSize = 16.sp
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+
+                    "Tu pedido",
+
+                    color = Color(0xFFF84F19),
+
                     fontSize = 18.sp
                 )
 
                 viewModelClient.comanda.forEach { item ->
+
                     Text(
+
                         "${item.nombre} x${item.cantidad}",
+
                         color = Color.White
                     )
                 }
 
-                HorizontalDivider(color = Color(0xFFF84F19))
+                HorizontalDivider(
+                    color = Color(0xFFF84F19)
+                )
 
                 Text(
+
                     "Total: ${"%.2f".format(total)} €",
+
                     color = Color(0xFFF84F19),
+
                     fontSize = 20.sp
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
+
                 Button(
+
                     onClick = {
-                        navController.navigate(Rutas.pantallaMapa)
+
+                        navController.navigate(
+                            Rutas.pantallaMapa
+                        )
                     },
+
                     modifier = Modifier.fillMaxWidth(),
+
                     colors = ButtonDefaults.buttonColors(
+
                         containerColor = Color(0xFFF84F19),
+
                         contentColor = Color.Black
                     )
+
                 ) {
+
                     Text("Seleccionar ubicación")
                 }
 
                 Button(
+
                     onClick = {
 
+                        if (DatosCompartidos.usuarioEditado == null) {
+
+                            Toast.makeText(
+                                context,
+                                "Selecciona un cliente",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            return@Button
+                        }
+
                         viewModelComanda.enviarComanda(
+
                             viewModelClient.comanda.toList(),
-                            onSuccess = {
-                                Toast.makeText(context, "Comanda enviada", Toast.LENGTH_SHORT)
-                                    .show()
-                                viewModelClient.comanda.clear()
-                            },
+
                             lat = lat,
+
                             lng = lng,
+
+                            onSuccess = {
+
+                                Toast.makeText(
+                                    context,
+                                    "Comanda enviada",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+
+                                viewModelClient.comanda.clear()
+
+                                DatosCompartidos.usuarioEditado = null
+                            },
+
                             onError = {
-                                Toast.makeText(context, "Error o faltan datos", Toast.LENGTH_SHORT)
-                                    .show()
+
+                                Toast.makeText(
+                                    context,
+                                    "Error o faltan datos",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         )
-
                     },
+
                     modifier = Modifier.fillMaxWidth(),
+
                     colors = ButtonDefaults.buttonColors(
+
                         containerColor = Color(0xFFF84F19),
+
                         contentColor = Color.Black
                     )
+
                 ) {
+
                     Text("Enviar comanda")
                 }
             }

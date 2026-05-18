@@ -20,7 +20,7 @@ class ComandaViewModel : ViewModel() {
         onError: () -> Unit
     ) {
 
-        val userId = DatosCompartidos.usuario?.id
+        val userId = DatosCompartidos.usuarioEditado?.id
 
         if (productos.isEmpty() || lat == null || lng == null || userId == null) {
             onError()

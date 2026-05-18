@@ -40,13 +40,13 @@ import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun historicoComandas(navController: NavHostController) {
+fun historicoComandas(navController: NavHostController,rol:Int) {
 
     val viewModel: HistorialViewModel = viewModel()
     val comandas by viewModel.comandas.collectAsState()
-    var expandir by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
-        viewModel.cargarComandasUsuario()
+        if (rol==4) viewModel.cargarComandasUsuario()
+        else viewModel.cargarComandas()
     }
 
     Scaffold(
