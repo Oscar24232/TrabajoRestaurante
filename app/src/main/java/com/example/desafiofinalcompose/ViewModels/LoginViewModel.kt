@@ -81,6 +81,8 @@ class LoginViewModel : ViewModel() {
                                         DatosCompartidos.usuario = usuario
                                         loginSuccess.value = true
                                         Log.d("Debug Rol",document.data.toString())
+                                        Log.d("Debug usuario completo", "USUARIO COMPLETO = ${DatosCompartidos.usuario}")
+                                        Log.d("Debug id", "ID USUARIO = ${DatosCompartidos.usuario?.id}")
                                     } else {
                                         errorMessage.value = "Error al parsear usuario"
                                     }

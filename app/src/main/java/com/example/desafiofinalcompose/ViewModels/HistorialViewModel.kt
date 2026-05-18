@@ -34,10 +34,11 @@ class HistorialViewModel : ViewModel() {
 
                 _comandas.value = lista
             }
+        Log.d("COMANDAS", "USER ID: $userId")
     }
     fun cargarComandas() {
 
-        val userId = DatosCompartidos.usuario?.id ?: return
+
 
         db.collection("comandas")
             .get()
