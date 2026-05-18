@@ -125,6 +125,7 @@ class LoginViewModel : ViewModel() {
                 errorMessage.value = e.message
             }
         }
+        loginSuccess.value
     }
 
     fun loginWithGoogle(idToken: String) {
@@ -149,7 +150,7 @@ class LoginViewModel : ViewModel() {
                                 uid = user.uid,
                                 nombre = user.displayName ?: "",
                                 email = user.email ?: "",
-                                rol = 2
+                                rol = 4
                             )
                         }
 
@@ -157,7 +158,7 @@ class LoginViewModel : ViewModel() {
                             id = user.uid,
                             nombre = user.displayName ?: "",
                             email = user.email ?: "",
-                            rol = 2
+                            rol = 4
                         )
 
                         Log.d("LOGIN", "USUARIO GUARDADO: ${DatosCompartidos.usuario?.id}")

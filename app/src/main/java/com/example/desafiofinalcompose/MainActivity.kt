@@ -49,7 +49,8 @@ class MainActivity : ComponentActivity() {
                         PantallaCrearProducto(navController)
                     }
                     composable(Rutas.pantallaHistorial) {
-                        historicoComandas(navController)
+                        val rol = DatosCompartidos.usuarioEditado?.rol ?: 0
+                        historicoComandas(navController,rol)
                     }
                     composable(Rutas.pantallaCliente) {
                         PantallaCliente(navController)

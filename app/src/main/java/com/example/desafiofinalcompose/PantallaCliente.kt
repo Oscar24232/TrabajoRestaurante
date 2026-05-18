@@ -171,7 +171,8 @@ fun PantallaCliente(navController: NavHostController) {
 
                         productos = platos,
 
-                        viewModelClient = viewModelClient
+                        viewModelClient = viewModelClient,
+                        habilitarBotones = false
                     )
                 }
 
@@ -183,7 +184,8 @@ fun PantallaCliente(navController: NavHostController) {
 
                         productos = bebidas,
 
-                        viewModelClient = viewModelClient
+                        viewModelClient = viewModelClient,
+                        habilitarBotones = false
                     )
                 }
             }

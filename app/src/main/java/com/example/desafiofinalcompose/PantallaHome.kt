@@ -46,6 +46,7 @@ fun PantallaHome(navController: NavHostController) {
         Log.d("LOG_DEBUG_ID", "${usuario?.rol}")
         when(usuario?.rol) {
             1 -> navController.navigate(Rutas.pantallaAdmin)
+            2 -> navController.navigate(Rutas.pantallaCamarero)
             4 -> navController.navigate(Rutas.pantallaCliente)
         }
 

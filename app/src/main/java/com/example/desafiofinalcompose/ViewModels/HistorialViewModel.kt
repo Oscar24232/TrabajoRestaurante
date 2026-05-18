@@ -32,4 +32,20 @@ class HistorialViewModel : ViewModel() {
                 _comandas.value = lista
             }
     }
+    fun cargarComandas() {
+
+        val userId = DatosCompartidos.usuario?.id ?: return
+
+        db.collection("comandas")
+            .get()
+            .addOnSuccessListener { result ->
+
+                val lista = result.mapNotNull { doc ->
+                    doc.toObject(Comanda::class.java)
+                }
+
+                _comandas.value = lista
+            }
+    }
+
 }

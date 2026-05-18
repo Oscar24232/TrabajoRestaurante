@@ -29,7 +29,8 @@ fun ItemProducto(
     producto: Producto,
     comanda: List<ProductoCantidad>,
     onAdd: (Producto) -> Unit,
-    onRemove: (Producto) -> Unit
+    onRemove: (Producto) -> Unit,
+    habilitarBotones: Boolean
 ) {
 
     val cantidad = comanda.find { it.nombre == producto.nombre }?.cantidad ?: 0
@@ -53,18 +54,20 @@ fun ItemProducto(
 
         Row(verticalAlignment = Alignment.CenterVertically) {
 
-            Button(onClick = { onRemove(producto) }, colors = ButtonDefaults.buttonColors(
+            Button(onClick = { onRemove(producto) },
+                enabled = habilitarBotones, colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFFF84F19),
-                contentColor = Color.Black
+                contentColor = Color.Black,
             )) {
                 Text("-")
             }
 
             Text("$cantidad", modifier = Modifier.padding(8.dp),color = Color.White)
 
-            Button(onClick = { onAdd(producto) }, colors = ButtonDefaults.buttonColors(
+            Button(onClick = { onAdd(producto) },
+                enabled = habilitarBotones, colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFFF84F19),
-                contentColor = Color.Black
+                contentColor = Color.Black,
             )) {
                 Text("+")
             }

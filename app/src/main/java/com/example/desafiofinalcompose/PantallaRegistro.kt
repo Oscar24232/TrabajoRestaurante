@@ -37,7 +37,7 @@ fun PantallaRegistro(navController: NavHostController) {
     LaunchedEffect(loginSuccess) {
         if (loginSuccess) {
             Toast.makeText(context, "Registro correcto", Toast.LENGTH_SHORT).show()
-            navController.navigate(Rutas.pantallaLogin)
+            navController.navigate(Rutas.pantallaCliente)
         }
     }
 
@@ -52,7 +52,7 @@ fun PantallaRegistro(navController: NavHostController) {
             TopAppBar(
                 title = { Text("Registro") },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Yellow,
+                    containerColor = Color(0xFFF84F19),
                     titleContentColor = Color.Black
                 )
             )
@@ -65,9 +65,10 @@ fun PantallaRegistro(navController: NavHostController) {
                 .padding(padding)
                 .background(
                     brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFF030303),
-                            Color(0xFF7C7878)
+                        colorStops = arrayOf(
+                            0.5f to Color(0xFF030303),
+                            0.9f to Color(0xFFF81A0C),
+                            1.0f to Color(0xFFF15524)
                         )
                     )
                 ),
@@ -167,8 +168,12 @@ fun PantallaRegistro(navController: NavHostController) {
                             fotoUrl,
                             4
                         )
+
                     },
                     modifier = Modifier.fillMaxWidth()
+                    ,colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFF84F19),
+                        contentColor = Color.Black)
                 ) {
                     Text("Registrarse")
                 }
@@ -180,6 +185,9 @@ fun PantallaRegistro(navController: NavHostController) {
                         navController.popBackStack()
                     },
                     modifier = Modifier.fillMaxWidth()
+                    ,colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFF84F19),
+                        contentColor = Color.Black)
                 ) {
                     Text("Volver")
                 }

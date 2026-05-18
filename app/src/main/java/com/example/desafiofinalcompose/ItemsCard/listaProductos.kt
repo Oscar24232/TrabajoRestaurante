@@ -14,7 +14,8 @@ import com.example.desafiofinalcompose.ViewModels.CamareroViewModel
 fun listaProductos(
     titulo: String,
     productos: List<Producto>,
-    viewModelClient: CamareroViewModel
+    viewModelClient: CamareroViewModel,
+    habilitarBotones:Boolean
 ) {
 
     Text(
@@ -30,7 +31,8 @@ fun listaProductos(
             producto = producto,
             comanda = viewModelClient.comanda,
             onAdd = viewModelClient::añadirProducto,
-            onRemove = viewModelClient::quitarProducto
+            onRemove = viewModelClient::quitarProducto,
+            habilitarBotones = habilitarBotones
         )
     }
 }
