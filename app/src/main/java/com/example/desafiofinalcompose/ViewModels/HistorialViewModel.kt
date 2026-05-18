@@ -1,6 +1,8 @@
 package com.example.desafiofinalcompose.ViewModels
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.ui.platform.LocalGraphicsContext
 import androidx.lifecycle.ViewModel
 import com.example.desafiofinalcompose.DatosCompartidos
 import com.example.desafiofinalcompose.Models.Comanda
@@ -19,6 +21,7 @@ class HistorialViewModel : ViewModel() {
     fun cargarComandasUsuario() {
 
         val userId = DatosCompartidos.usuario?.id ?: return
+        
 
         db.collection("comandas")
             .whereEqualTo("idusuario", userId)
