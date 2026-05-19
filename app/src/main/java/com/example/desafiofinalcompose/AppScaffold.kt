@@ -372,9 +372,9 @@ fun AppNavHost(
         composable(Rutas.pantallaCamarero) {
             PantallaCamarero(navController)
         }
-//        composable(Rutas.pantallaBarman) {
-//            PantallaBarman(navController)
-//        }
+        composable(Rutas.pantallaBarman) {
+            PantallaBarman(navController)
+        }
         composable(Rutas.pantallaCliente) {
             PantallaCliente(navController)
         }
