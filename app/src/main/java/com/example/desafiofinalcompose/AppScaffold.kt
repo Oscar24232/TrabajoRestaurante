@@ -363,12 +363,12 @@ fun AppNavHost(
         startDestination = startDestination,
         modifier = Modifier.padding(padding)
     ) {
-//        composable(Rutas.pantallaAdminUsuarios) {
-//            PantallaAdminUsuarios(navController)
-//        }
-//        composable(Rutas.pantallaAdminProductos) {
-//            PantallaAdminProductos(navController)
-//        }
+        composable(Rutas.pantallaAdminUsuarios) {
+            PantallaAdminUsuarios(navController)
+        }
+        composable(Rutas.pantallaAdminProductos) {
+            PantallaAdminProductos(navController)
+        }
         composable(Rutas.pantallaCamarero) {
             PantallaCamarero(navController)
         }
