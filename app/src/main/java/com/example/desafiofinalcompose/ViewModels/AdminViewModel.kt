@@ -56,6 +56,26 @@ class AdminViewModel : ViewModel() {
             .addOnFailureListener { onError() }
     }
 
+    fun editarUsuario(
+        usuarioId: String,
+        nuevoNombre: String,
+        nuevoEmail: String,
+        onSuccess: () -> Unit,
+        onError: () -> Unit
+    ) {
+        db.collection("usuarios")
+            .document(usuarioId)
+            .update(
+                "nombre", nuevoNombre,
+                "email", nuevoEmail
+            )
+            .addOnSuccessListener {
+                cargarUsuarios()
+                onSuccess()
+            }
+            .addOnFailureListener { onError() }
+    }
+
     fun eliminarUsuario(
         usuarioId: String,
         onSuccess: () -> Unit,
@@ -88,6 +108,26 @@ class AdminViewModel : ViewModel() {
                 _errorMessage.value = "Error al cargar productos"
                 _isLoading.value = false
             }
+    }
+
+    fun editarProducto(
+        productoId: String,
+        nuevoNombre: String,
+        nuevoPrecio: Double,
+        onSuccess: () -> Unit,
+        onError: () -> Unit
+    ) {
+        db.collection("productos")
+            .document(productoId)
+            .update(
+                "nombre", nuevoNombre,
+                "precio", nuevoPrecio
+            )
+            .addOnSuccessListener {
+                cargarProductos()
+                onSuccess()
+            }
+            .addOnFailureListener { onError() }
     }
 
     fun eliminarProducto(

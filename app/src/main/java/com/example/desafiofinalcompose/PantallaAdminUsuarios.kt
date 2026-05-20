@@ -14,7 +14,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -24,7 +26,9 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -122,6 +126,19 @@ fun PantallaAdminUsuarios(navController: NavHostController) {
                                     Toast.makeText(context, "Error al eliminar", Toast.LENGTH_SHORT).show()
                                 }
                             )
+                        },
+                        onEditar = { nuevoNombre, nuevoEmail ->
+                            viewModel.editarUsuario(
+                                usuarioId = usuario.id,
+                                nuevoNombre = nuevoNombre,
+                                nuevoEmail = nuevoEmail,
+                                onSuccess = {
+                                    Toast.makeText(context, "Usuario actualizado", Toast.LENGTH_SHORT).show()
+                                },
+                                onError = {
+                                    Toast.makeText(context, "Error al actualizar", Toast.LENGTH_SHORT).show()
+                                }
+                            )
                         }
                     )
                 }
@@ -134,9 +151,56 @@ fun PantallaAdminUsuarios(navController: NavHostController) {
 fun ItemUsuarioAdmin(
     usuario: Usuario,
     onCambiarRol: (Int) -> Unit,
-    onEliminar: () -> Unit
+    onEliminar: () -> Unit,
+    onEditar: (String, String) -> Unit
 ) {
     var expandirRol by remember { mutableStateOf(false) }
+    var mostrarDialogo by remember { mutableStateOf(false) }
+
+    // Estado local del formulario de edición — apunte 4
+    var nombreEdit by remember { mutableStateOf(usuario.nombre) }
+    var emailEdit by remember { mutableStateOf(usuario.email) }
+
+    if (mostrarDialogo) {
+        AlertDialog(
+            onDismissRequest = { mostrarDialogo = false },
+            title = { Text("Editar usuario") },
+            text = {
+                Column {
+                    OutlinedTextField(
+                        value = nombreEdit,
+                        onValueChange = { nombreEdit = it },
+                        label = { Text("Nombre") }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = emailEdit,
+                        onValueChange = { emailEdit = it },
+                        label = { Text("Email") }
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        onEditar(nombreEdit, emailEdit)
+                        mostrarDialogo = false
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFF84F19),
+                        contentColor = Color.Black
+                    )
+                ) {
+                    Text("Guardar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { mostrarDialogo = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
 
     Card(
         modifier = Modifier
@@ -168,6 +232,10 @@ fun ItemUsuarioAdmin(
                     color = Color(0xFFF84F19),
                     fontSize = 13.sp
                 )
+            }
+
+            IconButton(onClick = { mostrarDialogo = true }) {
+                Icon(Icons.Default.Edit, contentDescription = null, tint = Color.White)
             }
 
             Box {
