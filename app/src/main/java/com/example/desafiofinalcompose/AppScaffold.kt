@@ -59,161 +59,216 @@ fun AppScaffold(navController: NavHostController) {
     val context = LocalContext.current
     val viewModelLogin: LoginViewModel = viewModel()
 
+    val mostrarEstructura = currentRoute != Rutas.pantallaLogin
+            && currentRoute != Rutas.pantallaRegistro
+
     ModalNavigationDrawer(
         drawerState = drawerState,
+        gesturesEnabled = mostrarEstructura,
         drawerContent = {
             ModalDrawerSheet {
+                if (mostrarEstructura) {
 
-                Text(
-                    text = "Hola, ${usuario?.nombre ?: ""}",
-                    modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 16.dp)
-                )
+                    Text(
+                        text = "Hola, ${usuario?.nombre ?: ""}",
+                        modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 16.dp)
+                    )
 
-                when (usuario?.rol) {
+                    when (usuario?.rol) {
 
-                    1 -> {
-                        NavigationDrawerItem(
-                            label = { Text("Gestionar Usuarios") },
-                            selected = currentRoute == Rutas.pantallaAdminUsuarios,
-                            icon = { Icon(Icons.Default.Person, contentDescription = null) },
-                            onClick = {
-                                navController.navigate(Rutas.pantallaAdminUsuarios) {
-                                    popUpTo(navController.graph.startDestinationId)
-                                    launchSingleTop = true
+                        1 -> {
+                            NavigationDrawerItem(
+                                label = { Text("Gestionar Usuarios") },
+                                selected = currentRoute == Rutas.pantallaAdminUsuarios,
+                                icon = { Icon(Icons.Default.Person, contentDescription = null) },
+                                onClick = {
+                                    navController.navigate(Rutas.pantallaAdminUsuarios) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
                                 }
-                                scope.launch { drawerState.close() }
-                            }
-                        )
-                        NavigationDrawerItem(
-                            label = { Text("Gestionar Productos") },
-                            selected = currentRoute == Rutas.pantallaAdminProductos,
-                            icon = { Icon(Icons.Default.List, contentDescription = null) },
-                            onClick = {
-                                navController.navigate(Rutas.pantallaAdminProductos) {
-                                    popUpTo(navController.graph.startDestinationId)
-                                    launchSingleTop = true
+                            )
+                            NavigationDrawerItem(
+                                label = { Text("Gestionar Productos") },
+                                selected = currentRoute == Rutas.pantallaAdminProductos,
+                                icon = { Icon(Icons.Default.List, contentDescription = null) },
+                                onClick = {
+                                    navController.navigate(Rutas.pantallaAdminProductos) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
                                 }
-                                scope.launch { drawerState.close() }
-                            }
-                        )
-                    }
+                            )
+                        }
 
-                    2 -> {
-                        NavigationDrawerItem(
-                            label = { Text("Crear Comanda") },
-                            selected = currentRoute == Rutas.pantallaCamarero,
-                            icon = { Icon(Icons.Default.Home, contentDescription = null) },
-                            onClick = {
-                                navController.navigate(Rutas.pantallaCamarero) {
-                                    popUpTo(navController.graph.startDestinationId)
-                                    launchSingleTop = true
+                        2 -> {
+                            NavigationDrawerItem(
+                                label = { Text("Crear Comanda") },
+                                selected = currentRoute == Rutas.pantallaCamarero,
+                                icon = { Icon(Icons.Default.Home, contentDescription = null) },
+                                onClick = {
+                                    navController.navigate(Rutas.pantallaCamarero) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
                                 }
-                                scope.launch { drawerState.close() }
-                            }
-                        )
-                        NavigationDrawerItem(
-                            label = { Text("Historial Comandas") },
-                            selected = currentRoute == Rutas.pantallaHistorial,
-                            icon = { Icon(Icons.Default.List, contentDescription = null) },
-                            onClick = {
-                                navController.navigate(Rutas.pantallaHistorial) {
-                                    popUpTo(navController.graph.startDestinationId)
-                                    launchSingleTop = true
+                            )
+                            NavigationDrawerItem(
+                                label = { Text("Historial Comandas") },
+                                selected = currentRoute == Rutas.pantallaHistorial,
+                                icon = { Icon(Icons.Default.List, contentDescription = null) },
+                                onClick = {
+                                    navController.navigate(Rutas.pantallaHistorial) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
                                 }
-                                scope.launch { drawerState.close() }
-                            }
-                        )
-                    }
+                            )
+                        }
 
-                    3 -> {
-                        NavigationDrawerItem(
-                            label = { Text("Comandas Pendientes") },
-                            selected = currentRoute == Rutas.pantallaBarman,
-                            icon = { Icon(Icons.Default.Home, contentDescription = null) },
-                            onClick = {
-                                navController.navigate(Rutas.pantallaBarman) {
-                                    popUpTo(navController.graph.startDestinationId)
-                                    launchSingleTop = true
+                        3 -> {
+                            NavigationDrawerItem(
+                                label = { Text("Comandas Pendientes") },
+                                selected = currentRoute == Rutas.pantallaBarman,
+                                icon = { Icon(Icons.Default.Home, contentDescription = null) },
+                                onClick = {
+                                    navController.navigate(Rutas.pantallaBarman) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
                                 }
-                                scope.launch { drawerState.close() }
-                            }
-                        )
-                    }
+                            )
+                        }
 
-                    4 -> {
-                        NavigationDrawerItem(
-                            label = { Text("Carta") },
-                            selected = currentRoute == Rutas.pantallaCliente,
-                            icon = { Icon(Icons.Default.Home, contentDescription = null) },
-                            onClick = {
-                                navController.navigate(Rutas.pantallaCliente) {
-                                    popUpTo(navController.graph.startDestinationId)
-                                    launchSingleTop = true
+                        4 -> {
+                            NavigationDrawerItem(
+                                label = { Text("Carta") },
+                                selected = currentRoute == Rutas.pantallaCliente,
+                                icon = { Icon(Icons.Default.Home, contentDescription = null) },
+                                onClick = {
+                                    navController.navigate(Rutas.pantallaCliente) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
                                 }
-                                scope.launch { drawerState.close() }
-                            }
-                        )
-                        NavigationDrawerItem(
-                            label = { Text("Mis Pedidos") },
-                            selected = currentRoute == Rutas.pantallaHistorial,
-                            icon = { Icon(Icons.Default.List, contentDescription = null) },
-                            onClick = {
-                                navController.navigate(Rutas.pantallaHistorial) {
-                                    popUpTo(navController.graph.startDestinationId)
-                                    launchSingleTop = true
+                            )
+                            NavigationDrawerItem(
+                                label = { Text("Mis Pedidos") },
+                                selected = currentRoute == Rutas.pantallaHistorial,
+                                icon = { Icon(Icons.Default.List, contentDescription = null) },
+                                onClick = {
+                                    navController.navigate(Rutas.pantallaHistorial) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
                                 }
-                                scope.launch { drawerState.close() }
-                            }
-                        )
-                    }
-                }
-
-                NavigationDrawerItem(
-                    label = { Text("Cerrar sesión") },
-                    selected = false,
-                    icon = { Icon(Icons.Default.Person, contentDescription = null) },
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        viewModelLogin.signOut(context)
-                        navController.navigate(Rutas.pantallaLogin) {
-                            popUpTo(0) { inclusive = true }
+                            )
                         }
                     }
-                )
+
+                    NavigationDrawerItem(
+                        label = { Text("Cerrar sesión") },
+                        selected = false,
+                        icon = { Icon(Icons.Default.Person, contentDescription = null) },
+                        onClick = {
+                            scope.launch { drawerState.close() }
+                            viewModelLogin.signOut(context)
+                            navController.navigate(Rutas.pantallaLogin) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = true
+                                }
+                            }
+                        }
+                    )
+                }
             }
         }
     ) {
         Scaffold(
             topBar = {
-                AppTopBar(
-                    titulo = tituloSegunRuta(currentRoute),
-                    onAbrirDrawer = {
-                        scope.launch {
-                            if (drawerState.isClosed) drawerState.open()
-                            else drawerState.close()
+                if (mostrarEstructura) {
+                    AppTopBar(
+                        titulo = tituloSegunRuta(currentRoute),
+                        onAbrirDrawer = {
+                            scope.launch {
+                                if (drawerState.isClosed) drawerState.open()
+                                else drawerState.close()
+                            }
+                        },
+                        onMenuPuntos = { expanded = true },
+                        expanded = expanded,
+                        onDismissMenu = { expanded = false },
+                        onCerrarSesion = {
+                            expanded = false
+                            viewModelLogin.signOut(context)
+                            navController.navigate(Rutas.pantallaLogin) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = true
+                                }
+                            }
                         }
-                    },
-                    onMenuPuntos = { expanded = true },
-                    expanded = expanded,
-                    onDismissMenu = { expanded = false },
-                    onCerrarSesion = {
-                        expanded = false
-                        viewModelLogin.signOut(context)
-                        navController.navigate(Rutas.pantallaLogin) {
-                            popUpTo(0) { inclusive = true }
-                        }
-                    }
-                )
+                    )
+                }
             },
             bottomBar = {
-                AppBottomBar(
-                    rol = usuario?.rol ?: 0,
-                    currentRoute = currentRoute,
-                    navController = navController
-                )
+                if (mostrarEstructura) {
+                    AppBottomBar(
+                        rol = usuario?.rol ?: 0,
+                        currentRoute = currentRoute,
+                        navController = navController
+                    )
+                }
             }
         ) { padding ->
-            AppNavHost(navController = navController, padding = padding)
+            NavHost(
+                navController = navController,
+                startDestination = Rutas.pantallaLogin,
+                modifier = Modifier.padding(padding)
+            ) {
+                composable(Rutas.pantallaLogin) {
+                    PantallaLogin(navController)
+                }
+                composable(Rutas.pantallaRegistro) {
+                    PantallaRegistro(navController)
+                }
+                composable(Rutas.pantallaHome) {
+                    PantallaHome(navController)
+                }
+                composable(Rutas.pantallaAdmin) {
+                    PantallaAdmin(navController)
+                }
+                composable(Rutas.pantallaCamarero) {
+                    PantallaCamarero(navController)
+                }
+                composable(Rutas.pantallaBarman) {
+                    PantallaBarman(navController)
+                }
+                composable(Rutas.pantallaCliente) {
+                    PantallaCliente(navController)
+                }
+                composable(Rutas.pantallaHistorial) {
+                    historicoComandas(navController, DatosCompartidos.usuario?.rol ?: 0)
+                }
+                composable(Rutas.pantallaAdminUsuarios) {
+                    PantallaAdminUsuarios(navController)
+                }
+                composable(Rutas.pantallaAdminProductos) {
+                    PantallaAdminProductos(navController)
+                }
+                composable(Rutas.pantallaCrearProducto) {
+                    PantallaCrearProducto(navController)
+                }
+                composable(Rutas.pantallaMapa) {
+                    PantallaMaps(navController)
+                }
+            }
         }
     }
 }
@@ -339,53 +394,6 @@ fun AppBottomBar(
                     label = { Text("Mis pedidos") }
                 )
             }
-        }
-    }
-}
-
-@Composable
-fun AppNavHost(
-    navController: NavHostController,
-    padding: androidx.compose.foundation.layout.PaddingValues
-) {
-    val rol = DatosCompartidos.usuario?.rol ?: 0
-
-    val startDestination = when (rol) {
-        1    -> Rutas.pantallaAdminUsuarios
-        2    -> Rutas.pantallaCamarero
-        3    -> Rutas.pantallaBarman
-        4    -> Rutas.pantallaCliente
-        else -> Rutas.pantallaLogin
-    }
-
-    NavHost(
-        navController = navController,
-        startDestination = startDestination,
-        modifier = Modifier.padding(padding)
-    ) {
-        composable(Rutas.pantallaAdminUsuarios) {
-            PantallaAdminUsuarios(navController)
-        }
-        composable(Rutas.pantallaAdminProductos) {
-            PantallaAdminProductos(navController)
-        }
-        composable(Rutas.pantallaCamarero) {
-            PantallaCamarero(navController)
-        }
-        composable(Rutas.pantallaBarman) {
-            PantallaBarman(navController)
-        }
-        composable(Rutas.pantallaCliente) {
-            PantallaCliente(navController)
-        }
-        composable(Rutas.pantallaHistorial) {
-            historicoComandas(navController, rol)
-        }
-        composable(Rutas.pantallaCrearProducto) {
-            PantallaCrearProducto(navController)
-        }
-        composable(Rutas.pantallaMapa) {
-            PantallaMaps(navController)
         }
     }
 }

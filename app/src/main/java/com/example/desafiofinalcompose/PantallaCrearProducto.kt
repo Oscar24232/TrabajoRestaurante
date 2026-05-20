@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -80,6 +82,7 @@ fun PantallaCrearProducto(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
 
             Text("Nuevo producto", fontSize = 22.sp, color = Color.White)
@@ -220,6 +223,8 @@ fun PantallaCrearProducto(navController: NavHostController) {
             ) {
                 Text("Guardar producto")
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
