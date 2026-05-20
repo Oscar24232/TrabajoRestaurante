@@ -7,6 +7,8 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -24,6 +26,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +42,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.borrame.ui.home.PantallaMaps
+import com.example.desafiofinalcompose.ViewModels.BarmanViewModel
 import com.example.loginfirebase_25_26.LoginViewModel
 import kotlinx.coroutines.launch
 
@@ -58,6 +62,9 @@ fun AppScaffold(navController: NavHostController) {
 
     val context = LocalContext.current
     val viewModelLogin: LoginViewModel = viewModel()
+
+    val barmanViewModel: BarmanViewModel = viewModel()
+    val comandasPendientes by barmanViewModel.comandasPendientes.collectAsState()
 
     val mostrarEstructura = currentRoute != Rutas.pantallaLogin
             && currentRoute != Rutas.pantallaRegistro
@@ -131,10 +138,19 @@ fun AppScaffold(navController: NavHostController) {
                         }
 
                         3 -> {
+                            // Badge en el icono del drawer — apunte 7, sección 3
                             NavigationDrawerItem(
                                 label = { Text("Comandas Pendientes") },
                                 selected = currentRoute == Rutas.pantallaBarman,
-                                icon = { Icon(Icons.Default.Home, contentDescription = null) },
+                                icon = {
+                                    BadgedBox(badge = {
+                                        if (comandasPendientes.isNotEmpty()) {
+                                            Badge { Text(comandasPendientes.size.toString()) }
+                                        }
+                                    }) {
+                                        Icon(Icons.Default.Home, contentDescription = null)
+                                    }
+                                },
                                 onClick = {
                                     navController.navigate(Rutas.pantallaBarman) {
                                         popUpTo(navController.graph.startDestinationId)
@@ -222,7 +238,8 @@ fun AppScaffold(navController: NavHostController) {
                     AppBottomBar(
                         rol = usuario?.rol ?: 0,
                         currentRoute = currentRoute,
-                        navController = navController
+                        navController = navController,
+                        numeroComandasPendientes = comandasPendientes.size
                     )
                 }
             }
@@ -317,7 +334,8 @@ fun AppTopBar(
 fun AppBottomBar(
     rol: Int,
     currentRoute: String?,
-    navController: NavHostController
+    navController: NavHostController,
+    numeroComandasPendientes: Int = 0
 ) {
     when (rol) {
 
@@ -367,6 +385,30 @@ fun AppBottomBar(
                     },
                     icon = { Icon(Icons.Default.List, contentDescription = null) },
                     label = { Text("Historial") }
+                )
+            }
+        }
+
+        3 -> {
+            // BottomBar del barman con badge — apunte 7, sección 3
+            NavigationBar {
+                NavigationBarItem(
+                    selected = currentRoute == Rutas.pantallaBarman,
+                    onClick = {
+                        navController.navigate(Rutas.pantallaBarman) {
+                            launchSingleTop = true
+                        }
+                    },
+                    icon = {
+                        BadgedBox(badge = {
+                            if (numeroComandasPendientes > 0) {
+                                Badge { Text(numeroComandasPendientes.toString()) }
+                            }
+                        }) {
+                            Icon(Icons.Default.Home, contentDescription = null)
+                        }
+                    },
+                    label = { Text("Pendientes") }
                 )
             }
         }
