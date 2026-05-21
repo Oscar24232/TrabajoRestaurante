@@ -69,5 +69,18 @@ fun PantallaAdmin(navController: NavHostController) {
         ) {
             Text("Gestionar Productos")
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = { navController.navigate(Rutas.pantallaAdminComandas) },
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFF84F19),
+                contentColor = Color.Black
+            )
+        ) {
+            Text("Gestionar Comandas")
+        }
     }
 }

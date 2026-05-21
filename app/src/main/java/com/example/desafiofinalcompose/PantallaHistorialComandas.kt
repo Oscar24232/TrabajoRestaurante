@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -20,10 +21,12 @@ fun historicoComandas(navController: NavHostController, rol: Int) {
     val viewModel: HistorialViewModel = viewModel()
     val comandas by viewModel.comandas.collectAsState()
 
-    if (rol == 4) {
-        viewModel.cargarComandasUsuario()
-    } else {
-        viewModel.cargarComandas()
+    LaunchedEffect(Unit) {
+        if (rol == 4) {
+            viewModel.cargarComandasUsuario()
+        } else {
+            viewModel.cargarComandas()
+        }
     }
 
     LazyColumn(
