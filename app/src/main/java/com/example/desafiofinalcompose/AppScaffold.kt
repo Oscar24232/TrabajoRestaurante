@@ -108,6 +108,18 @@ fun AppScaffold(navController: NavHostController) {
                                     scope.launch { drawerState.close() }
                                 }
                             )
+                            NavigationDrawerItem(
+                                label = { Text("Gestionar Comandas") },
+                                selected = currentRoute == Rutas.pantallaAdminComandas,
+                                icon = { Icon(Icons.Default.Home, contentDescription = null) },
+                                onClick = {
+                                    navController.navigate(Rutas.pantallaAdminComandas) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
+                                }
+                            )
                         }
 
                         2 -> {
@@ -138,7 +150,6 @@ fun AppScaffold(navController: NavHostController) {
                         }
 
                         3 -> {
-                            // Badge en el icono del drawer — apunte 7, sección 3
                             NavigationDrawerItem(
                                 label = { Text("Comandas Pendientes") },
                                 selected = currentRoute == Rutas.pantallaBarman,
@@ -279,6 +290,9 @@ fun AppScaffold(navController: NavHostController) {
                 composable(Rutas.pantallaAdminProductos) {
                     PantallaAdminProductos(navController)
                 }
+                composable(Rutas.pantallaAdminComandas) {
+                    PantallaAdminComandas(navController)
+                }
                 composable(Rutas.pantallaCrearProducto) {
                     PantallaCrearProducto(navController)
                 }
@@ -361,6 +375,16 @@ fun AppBottomBar(
                     icon = { Icon(Icons.Default.List, contentDescription = null) },
                     label = { Text("Productos") }
                 )
+                NavigationBarItem(
+                    selected = currentRoute == Rutas.pantallaAdminComandas,
+                    onClick = {
+                        navController.navigate(Rutas.pantallaAdminComandas) {
+                            launchSingleTop = true
+                        }
+                    },
+                    icon = { Icon(Icons.Default.Home, contentDescription = null) },
+                    label = { Text("Comandas") }
+                )
             }
         }
 
@@ -390,7 +414,6 @@ fun AppBottomBar(
         }
 
         3 -> {
-            // BottomBar del barman con badge — apunte 7, sección 3
             NavigationBar {
                 NavigationBarItem(
                     selected = currentRoute == Rutas.pantallaBarman,
@@ -442,6 +465,7 @@ fun AppBottomBar(
 
 private fun tituloSegunRuta(ruta: String?): String {
     return when (ruta) {
+        Rutas.pantallaAdminComandas    -> "Comandas"
         Rutas.pantallaAdminUsuarios  -> "Usuarios"
         Rutas.pantallaAdminProductos -> "Productos"
         Rutas.pantallaCamarero       -> "Camarero"
