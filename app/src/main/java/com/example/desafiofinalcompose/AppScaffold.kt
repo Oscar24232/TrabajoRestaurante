@@ -150,7 +150,6 @@ fun AppScaffold(navController: NavHostController) {
                         }
 
                         3 -> {
-                            // Badge en el icono del drawer — apunte 7, sección 3
                             NavigationDrawerItem(
                                 label = { Text("Comandas Pendientes") },
                                 selected = currentRoute == Rutas.pantallaBarman,
@@ -415,7 +414,6 @@ fun AppBottomBar(
         }
 
         3 -> {
-            // BottomBar del barman con badge — apunte 7, sección 3
             NavigationBar {
                 NavigationBarItem(
                     selected = currentRoute == Rutas.pantallaBarman,

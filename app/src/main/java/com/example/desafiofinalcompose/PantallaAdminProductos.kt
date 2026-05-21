@@ -142,8 +142,6 @@ fun ItemProductoAdmin(
     onEditar: (String, Double) -> Unit
 ) {
     var mostrarDialogo by remember { mutableStateOf(false) }
-
-    // Estado local del formulario de edición — apunte 4
     var nombreEdit by remember { mutableStateOf(producto.nombre) }
     var precioEdit by remember { mutableStateOf(producto.precio.toString()) }
 

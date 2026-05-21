@@ -157,7 +157,6 @@ fun ItemUsuarioAdmin(
     var expandirRol by remember { mutableStateOf(false) }
     var mostrarDialogo by remember { mutableStateOf(false) }
 
-    // Estado local del formulario de edición — apunte 4
     var nombreEdit by remember { mutableStateOf(usuario.nombre) }
     var emailEdit by remember { mutableStateOf(usuario.email) }
 
