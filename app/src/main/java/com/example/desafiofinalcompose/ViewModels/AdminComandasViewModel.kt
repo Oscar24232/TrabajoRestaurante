@@ -28,7 +28,7 @@ class AdminComandasViewModel : ViewModel() {
                     val comanda = doc.toObject(Comanda::class.java)
                     comanda.id = doc.id
                     comanda
-                }
+                }.sortedByDescending { it.fecha }
                 _comandas.value = lista
                 _isLoading.value = false
             }

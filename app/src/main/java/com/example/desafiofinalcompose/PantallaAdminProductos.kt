@@ -141,13 +141,14 @@ fun ItemProductoAdmin(
     onEliminar: () -> Unit,
     onEditar: (String, Double) -> Unit
 ) {
-    var mostrarDialogo by remember { mutableStateOf(false) }
+    var mostrarDialogoEditar by remember { mutableStateOf(false) }
+    var mostrarDialogoEliminar by remember { mutableStateOf(false) }
     var nombreEdit by remember { mutableStateOf(producto.nombre) }
     var precioEdit by remember { mutableStateOf(producto.precio.toString()) }
 
-    if (mostrarDialogo) {
+    if (mostrarDialogoEditar) {
         AlertDialog(
-            onDismissRequest = { mostrarDialogo = false },
+            onDismissRequest = { mostrarDialogoEditar = false },
             title = { Text("Editar producto") },
             text = {
                 Column {
@@ -170,7 +171,7 @@ fun ItemProductoAdmin(
                         val precio = precioEdit.toDoubleOrNull()
                         if (precio != null) {
                             onEditar(nombreEdit, precio)
-                            mostrarDialogo = false
+                            mostrarDialogoEditar = false
                         }
                     },
                     colors = ButtonDefaults.buttonColors(
@@ -182,7 +183,34 @@ fun ItemProductoAdmin(
                 }
             },
             dismissButton = {
-                TextButton(onClick = { mostrarDialogo = false }) {
+                TextButton(onClick = { mostrarDialogoEditar = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
+    if (mostrarDialogoEliminar) {
+        AlertDialog(
+            onDismissRequest = { mostrarDialogoEliminar = false },
+            title = { Text("Eliminar producto") },
+            text = { Text("¿Estás seguro de que quieres eliminar ${producto.nombre}?") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        onEliminar()
+                        mostrarDialogoEliminar = false
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFF84F19),
+                        contentColor = Color.Black
+                    )
+                ) {
+                    Text("Eliminar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { mostrarDialogoEliminar = false }) {
                     Text("Cancelar")
                 }
             }
@@ -233,11 +261,11 @@ fun ItemProductoAdmin(
                 )
             }
 
-            IconButton(onClick = { mostrarDialogo = true }) {
+            IconButton(onClick = { mostrarDialogoEditar = true }) {
                 Icon(Icons.Default.Edit, contentDescription = null, tint = Color.White)
             }
 
-            IconButton(onClick = onEliminar) {
+            IconButton(onClick = { mostrarDialogoEliminar = true }) {
                 Icon(Icons.Default.Delete, contentDescription = null, tint = Color(0xFFF84F19))
             }
         }

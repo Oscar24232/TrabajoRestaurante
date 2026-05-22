@@ -24,7 +24,7 @@ class HistorialViewModel : ViewModel() {
                     val comanda = doc.toObject(Comanda::class.java)
                     comanda.id = doc.id
                     comanda
-                }
+                }.sortedByDescending { it.fecha }
                 _comandas.value = lista
             }
     }
@@ -37,7 +37,7 @@ class HistorialViewModel : ViewModel() {
                     val comanda = doc.toObject(Comanda::class.java)
                     comanda.id = doc.id
                     comanda
-                }
+                }.sortedByDescending { it.fecha }
                 _comandas.value = lista
             }
     }

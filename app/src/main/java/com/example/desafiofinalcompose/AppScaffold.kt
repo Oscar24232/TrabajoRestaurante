@@ -296,6 +296,9 @@ fun AppScaffold(navController: NavHostController) {
                 composable(Rutas.pantallaCrearProducto) {
                     PantallaCrearProducto(navController)
                 }
+                composable(Rutas.pantallaCrearUsuario) {
+                    PantallaCrearUsuario(navController)
+                }
                 composable(Rutas.pantallaMapa) {
                     PantallaMaps(navController)
                 }
@@ -466,14 +469,14 @@ fun AppBottomBar(
 private fun tituloSegunRuta(ruta: String?): String {
     return when (ruta) {
         Rutas.pantallaAdminComandas    -> "Comandas"
-        Rutas.pantallaAdminUsuarios  -> "Usuarios"
-        Rutas.pantallaAdminProductos -> "Productos"
-        Rutas.pantallaCamarero       -> "Camarero"
-        Rutas.pantallaBarman         -> "Barman"
-        Rutas.pantallaCliente        -> "Carta"
-        Rutas.pantallaHistorial      -> "Historial"
-        Rutas.pantallaCrearProducto  -> "Nuevo producto"
-        Rutas.pantallaMapa           -> "Seleccionar ubicación"
-        else                         -> "Restaurante"
+        Rutas.pantallaAdminUsuarios    -> "Usuarios"
+        Rutas.pantallaAdminProductos   -> "Productos"
+        Rutas.pantallaCamarero         -> "Camarero"
+        Rutas.pantallaBarman           -> "Barman"
+        Rutas.pantallaCliente          -> "Carta"
+        Rutas.pantallaHistorial        -> "Historial"
+        Rutas.pantallaCrearProducto    -> "Nuevo producto"
+        Rutas.pantallaMapa             -> "Seleccionar ubicación"
+        else                           -> "Restaurante"
     }
 }

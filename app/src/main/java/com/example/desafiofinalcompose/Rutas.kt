@@ -14,6 +14,6 @@ object Rutas {
     val pantallaHistorial        = "Pantalla historial"
     val pantallaAdminUsuarios    = "admin_usuarios"
     val pantallaAdminProductos   = "admin_productos"
-
     val pantallaAdminComandas    = "admin_comandas"
+    val pantallaCrearUsuario     = "crear_usuario"
 }
