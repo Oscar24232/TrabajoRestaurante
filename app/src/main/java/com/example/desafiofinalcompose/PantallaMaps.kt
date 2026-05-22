@@ -14,12 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -36,10 +32,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.maps.android.compose.MapUiSettings
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
-import kotlin.let
-import kotlin.text.orEmpty
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaMaps(navController: NavHostController) {
 
@@ -88,103 +81,86 @@ fun PantallaMaps(navController: NavHostController) {
         )
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Seleccionar ubicación") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFF84F19),
-                    titleContentColor = Color.Black
-                )
-            )
-        }
-    ) { padding ->
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
 
-        Column(
+        GoogleMap(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
+                .fillMaxWidth()
+                .weight(1f),
+            cameraPositionState = cameraPositionState,
+            properties = mapProperties,
+            uiSettings = MapUiSettings(
+                myLocationButtonEnabled = true,
+                tiltGesturesEnabled = true,
+                rotationGesturesEnabled = true
+            ),
+            onMapClick = { latLng ->
+                viewModel.selectCoordinates(latLng)
+                viewModel.updateCoordinates(latLng)
+            }
         ) {
 
-            //MAPA
-            GoogleMap(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                cameraPositionState = cameraPositionState,
-                properties = mapProperties,
-                uiSettings = MapUiSettings(
-                    myLocationButtonEnabled = true,
-                    tiltGesturesEnabled = true,
-                    rotationGesturesEnabled = true
-                ),
-                onMapClick = { latLng ->
-                    viewModel.selectCoordinates(latLng)
-                    viewModel.updateCoordinates(latLng)
-                }
-            ) {
-
-                selectedCoordinates?.let {
-                    Marker(
-                        state = MarkerState(position = it),
-                        title = "Ubicación seleccionada"
-                    )
-                }
-
-                location.value?.let {
-                    Circle(
-                        center = LatLng(it.latitude, it.longitude),
-                        radius = 70.0,
-                        strokeColor = Color.Blue,
-                        fillColor = Color.Blue.copy(alpha = 0.4f)
-                    )
-                }
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                OutlinedTextField(
-                    value = selectedCoordinates?.latitude?.toString().orEmpty(),
-                    onValueChange = {},
-                    label = { Text("Latitud") },
-                    modifier = Modifier.weight(1f)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                OutlinedTextField(
-                    value = selectedCoordinates?.longitude?.toString().orEmpty(),
-                    onValueChange = {},
-                    label = { Text("Longitud") },
-                    modifier = Modifier.weight(1f)
+            selectedCoordinates?.let {
+                Marker(
+                    state = MarkerState(position = it),
+                    title = "Ubicación seleccionada"
                 )
             }
 
-
-            Button(
-                onClick = {
-
-                    if (selectedCoordinates == null) {
-                        Toast.makeText(context, "Selecciona ubicación", Toast.LENGTH_SHORT).show()
-                        return@Button
-                    }
-
-                    DatosCompartidos.lat = selectedCoordinates!!.latitude
-                    DatosCompartidos.lng = selectedCoordinates!!.longitude
-
-                    navController.popBackStack()
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFF84F19),
-                    contentColor = Color.Black
+            location.value?.let {
+                Circle(
+                    center = LatLng(it.latitude, it.longitude),
+                    radius = 70.0,
+                    strokeColor = Color.Blue,
+                    fillColor = Color.Blue.copy(alpha = 0.4f)
                 )
-            ) {
-                Text("Confirmar ubicación")
             }
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            OutlinedTextField(
+                value = selectedCoordinates?.latitude?.toString().orEmpty(),
+                onValueChange = {},
+                label = { Text("Latitud") },
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            OutlinedTextField(
+                value = selectedCoordinates?.longitude?.toString().orEmpty(),
+                onValueChange = {},
+                label = { Text("Longitud") },
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        Button(
+            onClick = {
+                if (selectedCoordinates == null) {
+                    Toast.makeText(context, "Selecciona ubicación", Toast.LENGTH_SHORT).show()
+                    return@Button
+                }
+
+                DatosCompartidos.lat = selectedCoordinates!!.latitude
+                DatosCompartidos.lng = selectedCoordinates!!.longitude
+
+                navController.popBackStack()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFF84F19),
+                contentColor = Color.Black
+            )
+        ) {
+            Text("Confirmar ubicación")
         }
     }
 }

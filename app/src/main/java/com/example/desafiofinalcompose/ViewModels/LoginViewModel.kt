@@ -3,9 +3,9 @@ package com.example.loginfirebase_25_26
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.desafiofinalcompose.DatosCompartidos
@@ -17,21 +17,26 @@ import kotlinx.coroutines.launch
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
-
 class LoginViewModel : ViewModel() {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val repo = RepositorioUsuarios()
-    val TAG = "Oscar"
 
-    val isLoading = MutableStateFlow(false)
-    val loginSuccess = MutableStateFlow(false)
-    val errorMessage = MutableStateFlow<String?>(null)
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
-    val isGoogleLogin = MutableStateFlow(false)
+    private val _loginSuccess = MutableStateFlow(false)
+    val loginSuccess: StateFlow<Boolean> = _loginSuccess
+
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
+
+    private val _isGoogleLogin = MutableStateFlow(false)
+    val isGoogleLogin: StateFlow<Boolean> = _isGoogleLogin
 
     val isUserLoggedIn: Boolean
         get() = auth.currentUser != null
+
     fun registrarUsuarioAdmin(
         email: String,
         password: String,
@@ -42,20 +47,19 @@ class LoginViewModel : ViewModel() {
     ) {
         viewModelScope.launch {
             try {
-                repo.registrarUsuarioAdmin(
-                    email, password, nombre, rol
-                )
+                repo.registrarUsuarioAdmin(email, password, nombre, rol)
                 onSuccess()
             } catch (e: Exception) {
                 onError()
             }
         }
     }
+
     fun loginWithEmail(email: String, password: String) {
 
-        isLoading.value = true
-        errorMessage.value = null
-        loginSuccess.value = false
+        _isLoading.value = true
+        _errorMessage.value = null
+        _loginSuccess.value = false
 
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -77,57 +81,50 @@ class LoginViewModel : ViewModel() {
                                     val usuario = document.toObject(Usuario::class.java)
 
                                     if (usuario != null) {
-
                                         DatosCompartidos.usuario = usuario
-                                        loginSuccess.value = true
-                                        Log.d("Debug Rol",document.data.toString())
-                                        Log.d("Debug usuario completo", "USUARIO COMPLETO = ${DatosCompartidos.usuario}")
-                                        Log.d("Debug id", "ID USUARIO = ${DatosCompartidos.usuario?.id}")
+                                        _loginSuccess.value = true
                                     } else {
-                                        errorMessage.value = "Error al parsear usuario"
+                                        _errorMessage.value = "Error al parsear usuario"
                                     }
 
                                 } else {
-                                    errorMessage.value = "Usuario no existe en Firestore"
+                                    _errorMessage.value = "Usuario no existe en Firestore"
                                 }
 
-                                isLoading.value = false
+                                _isLoading.value = false
                             }
                             .addOnFailureListener {
-                                errorMessage.value = "Error al obtener usuario"
-                                isLoading.value = false
+                                _errorMessage.value = "Error al obtener usuario"
+                                _isLoading.value = false
                             }
 
                     } else {
-                        errorMessage.value = "Usuario null"
-                        isLoading.value = false
+                        _errorMessage.value = "Usuario null"
+                        _isLoading.value = false
                     }
 
                 } else {
-                    errorMessage.value = "Error en login"
-                    isLoading.value = false
+                    _errorMessage.value = "Error en login"
+                    _isLoading.value = false
                 }
             }
     }
 
-    fun registerWithEmail(email: String, password: String, nombre: String, fotoUrl: String,rol:Int) {
-        isLoading.value = true
-        errorMessage.value = null
+    fun registerWithEmail(email: String, password: String, nombre: String, fotoUrl: String, rol: Int) {
+        _isLoading.value = true
+        _errorMessage.value = null
 
         viewModelScope.launch {
             try {
-                repo.registrarUsuario(email, password, nombre,rol)
-
-                isLoading.value = false
-                isGoogleLogin.value = false
-                loginSuccess.value = true
-
+                repo.registrarUsuario(email, password, nombre, rol)
+                _isLoading.value = false
+                _isGoogleLogin.value = false
+                _loginSuccess.value = true
             } catch (e: Exception) {
-                isLoading.value = false
-                errorMessage.value = e.message
+                _isLoading.value = false
+                _errorMessage.value = e.message
             }
         }
-        loginSuccess.value
     }
 
     fun loginWithGoogle(idToken: String) {
@@ -145,8 +142,6 @@ class LoginViewModel : ViewModel() {
 
                     if (user != null) {
 
-                        Log.d("LOGIN", "UID: ${user.uid}")
-
                         viewModelScope.launch {
                             repo.registraGmailAutentificado(
                                 uid = user.uid,
@@ -163,80 +158,39 @@ class LoginViewModel : ViewModel() {
                             rol = 4
                         )
 
-                        Log.d("LOGIN", "USUARIO GUARDADO: ${DatosCompartidos.usuario?.id}")
+                        _isGoogleLogin.value = true
+                        _loginSuccess.value = true
+
+                    } else {
+                        _errorMessage.value = "Error al obtener usuario de Google"
                     }
 
                 } else {
-                    Log.e("LOGIN", "Error: ${task.exception?.message}")
+                    _errorMessage.value = "Error en login con Google"
                 }
             }
     }
 
     fun signOut(context: Context) {
         auth.signOut()
-        // Si el usuario se logueó con Google, cierra sesión y revoca acceso
-        if (isGoogleLogin.value) {
-            val googleSignInClient = com.google.android.gms.auth.api.signin.GoogleSignIn.getClient(
+
+        if (_isGoogleLogin.value) {
+            val googleSignInClient = GoogleSignIn.getClient(
                 context,
-                com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder(
-                    com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN
-                )
+                GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken(context.getString(R.string.default_web_client_id))
                     .requestEmail()
                     .build()
             )
 
-            googleSignInClient.signOut().addOnCompleteListener {
-                Log.d(TAG, "Google Sign-Out completado")
-            }
-
-            googleSignInClient.revokeAccess().addOnCompleteListener {
-                Log.d(TAG, "Google Access revocado")
-            }
+            googleSignInClient.signOut()
+            googleSignInClient.revokeAccess()
         }
 
-        // Reiniciar estados del ViewModel
-        loginSuccess.value = false
-        errorMessage.value = null
-        isLoading.value = false
-        isGoogleLogin.value = false
+        _loginSuccess.value = false
+        _errorMessage.value = null
+        _isLoading.value = false
+        _isGoogleLogin.value = false
         DatosCompartidos.usuario = null
-
     }
 }
-
-
-/*
-** LiveData
-    Ventajas
-
-        Muy estable y probado: funciona con Activities, Fragments y Compose.
-
-        Funciona automáticamente con el ciclo de vida (observe respeta LifecycleOwner).
-
-        Fácil de usar si tu app todavía mezcla XML + Compose.
-
-    Desventajas
-
-        No tan flexible para flows de datos reactivos.
-
-        Manejo de coroutines menos natural.
-
-        Para Compose, necesitas observeAsState() cada vez que quieres usarlo como State.
-
-
-** StateFlow / MutableStateFlow (o SharedFlow)
-    Ventajas
-
-        Integración nativa con Compose: collectAsState() convierte un StateFlow en State automáticamente.
-
-        Funciona muy bien con coroutines, lo que hace más fácil manejar loading, errores o eventos.
-
-        Evita problemas de “duplicación de eventos” que a veces tienes con LiveData (como Toast que se dispara varias veces al recomponer).
-
-    Desventajas
-
-        Necesitas un scope de coroutine para colectar.
-
-        No tiene “respetar lifecycle” automático como LiveData: si quieres observar desde un Fragment/Activity, necesitas lifecycleScope.launchWhenStarted o similar.
- */

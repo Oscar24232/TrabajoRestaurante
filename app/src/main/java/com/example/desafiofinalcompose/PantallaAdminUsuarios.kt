@@ -81,7 +81,7 @@ fun PantallaAdminUsuarios(navController: NavHostController) {
         Spacer(modifier = Modifier.height(12.dp))
 
         Button(
-            onClick = { navController.navigate(Rutas.pantallaRegistro) },
+            onClick = { navController.navigate(Rutas.pantallaCrearUsuario) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -155,14 +155,15 @@ fun ItemUsuarioAdmin(
     onEditar: (String, String) -> Unit
 ) {
     var expandirRol by remember { mutableStateOf(false) }
-    var mostrarDialogo by remember { mutableStateOf(false) }
+    var mostrarDialogoEditar by remember { mutableStateOf(false) }
+    var mostrarDialogoEliminar by remember { mutableStateOf(false) }
 
     var nombreEdit by remember { mutableStateOf(usuario.nombre) }
     var emailEdit by remember { mutableStateOf(usuario.email) }
 
-    if (mostrarDialogo) {
+    if (mostrarDialogoEditar) {
         AlertDialog(
-            onDismissRequest = { mostrarDialogo = false },
+            onDismissRequest = { mostrarDialogoEditar = false },
             title = { Text("Editar usuario") },
             text = {
                 Column {
@@ -183,7 +184,7 @@ fun ItemUsuarioAdmin(
                 Button(
                     onClick = {
                         onEditar(nombreEdit, emailEdit)
-                        mostrarDialogo = false
+                        mostrarDialogoEditar = false
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFF84F19),
@@ -194,7 +195,34 @@ fun ItemUsuarioAdmin(
                 }
             },
             dismissButton = {
-                TextButton(onClick = { mostrarDialogo = false }) {
+                TextButton(onClick = { mostrarDialogoEditar = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
+    if (mostrarDialogoEliminar) {
+        AlertDialog(
+            onDismissRequest = { mostrarDialogoEliminar = false },
+            title = { Text("Eliminar usuario") },
+            text = { Text("¿Estás seguro de que quieres eliminar a ${usuario.nombre}?") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        onEliminar()
+                        mostrarDialogoEliminar = false
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFF84F19),
+                        contentColor = Color.Black
+                    )
+                ) {
+                    Text("Eliminar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { mostrarDialogoEliminar = false }) {
                     Text("Cancelar")
                 }
             }
@@ -233,7 +261,7 @@ fun ItemUsuarioAdmin(
                 )
             }
 
-            IconButton(onClick = { mostrarDialogo = true }) {
+            IconButton(onClick = { mostrarDialogoEditar = true }) {
                 Icon(Icons.Default.Edit, contentDescription = null, tint = Color.White)
             }
 
@@ -264,7 +292,7 @@ fun ItemUsuarioAdmin(
                 }
             }
 
-            IconButton(onClick = onEliminar) {
+            IconButton(onClick = { mostrarDialogoEliminar = true }) {
                 Icon(Icons.Default.Delete, contentDescription = null, tint = Color(0xFFF84F19))
             }
         }
