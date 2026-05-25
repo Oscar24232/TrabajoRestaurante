@@ -33,7 +33,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -55,6 +54,7 @@ fun PantallaAdminComandas(navController: NavHostController) {
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
     val context = LocalContext.current
+    val usuario = DatosCompartidos.usuario
 
     LaunchedEffect(Unit) {
         viewModel.cargarComandas()
@@ -69,18 +69,31 @@ fun PantallaAdminComandas(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(Color.Black, Color.Black, Color(0xFFF84F19))
-                )
-            )
+            .background(Color(0xFF0D0D0D))
     ) {
 
         Spacer(modifier = Modifier.height(12.dp))
 
+        if (usuario?.rol == 1) {
+            Button(
+                onClick = { navController.navigate(Rutas.pantallaCamarero) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFFF9800),
+                    contentColor = Color(0xFF0D0D0D)
+                )
+            ) {
+                Text("+ Nueva comanda", fontWeight = FontWeight.Bold)
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
         if (isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = Color(0xFFF84F19))
+                CircularProgressIndicator(color = Color(0xFFFF9800))
             }
         } else {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
@@ -109,7 +122,8 @@ fun PantallaAdminComandas(navController: NavHostController) {
                                     Toast.makeText(context, "Error al actualizar", Toast.LENGTH_SHORT).show()
                                 }
                             )
-                        }
+                        },
+                        mostrarEliminar = usuario?.rol == 1
                     )
                 }
             }
@@ -121,7 +135,8 @@ fun PantallaAdminComandas(navController: NavHostController) {
 fun ItemComandaAdmin(
     comanda: Comanda,
     onEliminar: () -> Unit,
-    onCambiarEstado: (String) -> Unit
+    onCambiarEstado: (String) -> Unit,
+    mostrarEliminar: Boolean
 ) {
     val total = comanda.productos.sumOf { it.precio * it.cantidad }
     var mostrarDialogoEliminar by remember { mutableStateOf(false) }
@@ -130,9 +145,9 @@ fun ItemComandaAdmin(
         .format(Date(comanda.fecha))
 
     val colorEstado = when (comanda.estado) {
-        "servida"   -> Color.Green
-        "pendiente" -> Color.Yellow
-        else        -> Color.Gray
+        "servida"   -> Color(0xFF4CAF50)
+        "pendiente" -> Color(0xFFFFC107)
+        else        -> Color(0xFF9E9E9E)
     }
 
     if (mostrarDialogoEliminar) {
@@ -147,8 +162,8 @@ fun ItemComandaAdmin(
                         mostrarDialogoEliminar = false
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFF84F19),
-                        contentColor = Color.Black
+                        containerColor = Color(0xFFFF9800),
+                        contentColor = Color(0xFF0D0D0D)
                     )
                 ) {
                     Text("Eliminar")
@@ -166,14 +181,14 @@ fun ItemComandaAdmin(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 6.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A)),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
 
             Text(
                 text = "PEDIDO",
-                color = Color(0xFFF84F19),
+                color = Color(0xFFFF9800),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -182,7 +197,7 @@ fun ItemComandaAdmin(
 
             Text(
                 text = "Fecha: $fechaFormateada",
-                color = Color.Gray,
+                color = Color(0xFF9E9E9E),
                 fontSize = 12.sp
             )
 
@@ -207,13 +222,13 @@ fun ItemComandaAdmin(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            HorizontalDivider(color = Color(0xFFF84F19))
+            HorizontalDivider(color = Color(0xFFFF9800))
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = "Total: ${"%.2f".format(total)} €",
-                color = Color(0xFFF84F19),
+                color = Color(0xFFFF9800),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -225,8 +240,8 @@ fun ItemComandaAdmin(
                     onClick = { onCambiarEstado("servida") },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Green,
-                        contentColor = Color.Black
+                        containerColor = Color(0xFF4CAF50),
+                        contentColor = Color(0xFF0D0D0D)
                     )
                 ) {
                     Text("Marcar como servida", fontWeight = FontWeight.Bold)
@@ -236,21 +251,22 @@ fun ItemComandaAdmin(
                     onClick = { onCambiarEstado("pendiente") },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Yellow,
-                        contentColor = Color.Black
+                        containerColor = Color(0xFFFFC107),
+                        contentColor = Color(0xFF0D0D0D)
                     )
                 ) {
                     Text("Marcar como pendiente", fontWeight = FontWeight.Bold)
                 }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            IconButton(
-                onClick = { mostrarDialogoEliminar = true },
-                modifier = Modifier.align(Alignment.End)
-            ) {
-                Icon(Icons.Default.Delete, contentDescription = null, tint = Color(0xFFF84F19))
+            if (mostrarEliminar) {
+                Spacer(modifier = Modifier.height(8.dp))
+                IconButton(
+                    onClick = { mostrarDialogoEliminar = true },
+                    modifier = Modifier.align(Alignment.End)
+                ) {
+                    Icon(Icons.Default.Delete, contentDescription = null, tint = Color(0xFFE53935))
+                }
             }
         }
     }

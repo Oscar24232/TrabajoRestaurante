@@ -170,6 +170,18 @@ fun AppScaffold(navController: NavHostController) {
                                     scope.launch { drawerState.close() }
                                 }
                             )
+                            NavigationDrawerItem(
+                                label = { Text("Historial Comandas") },
+                                selected = currentRoute == Rutas.pantallaAdminComandas,
+                                icon = { Icon(Icons.Default.List, contentDescription = null) },
+                                onClick = {
+                                    navController.navigate(Rutas.pantallaAdminComandas) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
+                                }
+                            )
                         }
 
                         4 -> {
@@ -260,48 +272,20 @@ fun AppScaffold(navController: NavHostController) {
                 startDestination = Rutas.pantallaLogin,
                 modifier = Modifier.padding(padding)
             ) {
-                composable(Rutas.pantallaLogin) {
-                    PantallaLogin(navController)
-                }
-                composable(Rutas.pantallaRegistro) {
-                    PantallaRegistro(navController)
-                }
-                composable(Rutas.pantallaHome) {
-                    PantallaHome(navController)
-                }
-                composable(Rutas.pantallaAdmin) {
-                    PantallaAdmin(navController)
-                }
-                composable(Rutas.pantallaCamarero) {
-                    PantallaCamarero(navController)
-                }
-                composable(Rutas.pantallaBarman) {
-                    PantallaBarman(navController)
-                }
-                composable(Rutas.pantallaCliente) {
-                    PantallaCliente(navController)
-                }
-                composable(Rutas.pantallaHistorial) {
-                    historicoComandas(navController, DatosCompartidos.usuario?.rol ?: 0)
-                }
-                composable(Rutas.pantallaAdminUsuarios) {
-                    PantallaAdminUsuarios(navController)
-                }
-                composable(Rutas.pantallaAdminProductos) {
-                    PantallaAdminProductos(navController)
-                }
-                composable(Rutas.pantallaAdminComandas) {
-                    PantallaAdminComandas(navController)
-                }
-                composable(Rutas.pantallaCrearProducto) {
-                    PantallaCrearProducto(navController)
-                }
-                composable(Rutas.pantallaCrearUsuario) {
-                    PantallaCrearUsuario(navController)
-                }
-                composable(Rutas.pantallaMapa) {
-                    PantallaMaps(navController)
-                }
+                composable(Rutas.pantallaLogin) { PantallaLogin(navController) }
+                composable(Rutas.pantallaRegistro) { PantallaRegistro(navController) }
+                composable(Rutas.pantallaHome) { PantallaHome(navController) }
+                composable(Rutas.pantallaAdmin) { PantallaAdmin(navController) }
+                composable(Rutas.pantallaCamarero) { PantallaCamarero(navController) }
+                composable(Rutas.pantallaBarman) { PantallaBarman(navController) }
+                composable(Rutas.pantallaCliente) { PantallaCliente(navController) }
+                composable(Rutas.pantallaHistorial) { historicoComandas(navController, DatosCompartidos.usuario?.rol ?: 0) }
+                composable(Rutas.pantallaAdminUsuarios) { PantallaAdminUsuarios(navController) }
+                composable(Rutas.pantallaAdminProductos) { PantallaAdminProductos(navController) }
+                composable(Rutas.pantallaAdminComandas) { PantallaAdminComandas(navController) }
+                composable(Rutas.pantallaCrearProducto) { PantallaCrearProducto(navController) }
+                composable(Rutas.pantallaCrearUsuario) { PantallaCrearUsuario(navController) }
+                composable(Rutas.pantallaMapa) { PantallaMaps(navController) }
             }
         }
     }
@@ -360,31 +344,19 @@ fun AppBottomBar(
             NavigationBar {
                 NavigationBarItem(
                     selected = currentRoute == Rutas.pantallaAdminUsuarios,
-                    onClick = {
-                        navController.navigate(Rutas.pantallaAdminUsuarios) {
-                            launchSingleTop = true
-                        }
-                    },
+                    onClick = { navController.navigate(Rutas.pantallaAdminUsuarios) { launchSingleTop = true } },
                     icon = { Icon(Icons.Default.Person, contentDescription = null) },
                     label = { Text("Usuarios") }
                 )
                 NavigationBarItem(
                     selected = currentRoute == Rutas.pantallaAdminProductos,
-                    onClick = {
-                        navController.navigate(Rutas.pantallaAdminProductos) {
-                            launchSingleTop = true
-                        }
-                    },
+                    onClick = { navController.navigate(Rutas.pantallaAdminProductos) { launchSingleTop = true } },
                     icon = { Icon(Icons.Default.List, contentDescription = null) },
                     label = { Text("Productos") }
                 )
                 NavigationBarItem(
                     selected = currentRoute == Rutas.pantallaAdminComandas,
-                    onClick = {
-                        navController.navigate(Rutas.pantallaAdminComandas) {
-                            launchSingleTop = true
-                        }
-                    },
+                    onClick = { navController.navigate(Rutas.pantallaAdminComandas) { launchSingleTop = true } },
                     icon = { Icon(Icons.Default.Home, contentDescription = null) },
                     label = { Text("Comandas") }
                 )
@@ -395,21 +367,13 @@ fun AppBottomBar(
             NavigationBar {
                 NavigationBarItem(
                     selected = currentRoute == Rutas.pantallaCamarero,
-                    onClick = {
-                        navController.navigate(Rutas.pantallaCamarero) {
-                            launchSingleTop = true
-                        }
-                    },
+                    onClick = { navController.navigate(Rutas.pantallaCamarero) { launchSingleTop = true } },
                     icon = { Icon(Icons.Default.Home, contentDescription = null) },
                     label = { Text("Comanda") }
                 )
                 NavigationBarItem(
                     selected = currentRoute == Rutas.pantallaHistorial,
-                    onClick = {
-                        navController.navigate(Rutas.pantallaHistorial) {
-                            launchSingleTop = true
-                        }
-                    },
+                    onClick = { navController.navigate(Rutas.pantallaHistorial) { launchSingleTop = true } },
                     icon = { Icon(Icons.Default.List, contentDescription = null) },
                     label = { Text("Historial") }
                 )
@@ -420,11 +384,7 @@ fun AppBottomBar(
             NavigationBar {
                 NavigationBarItem(
                     selected = currentRoute == Rutas.pantallaBarman,
-                    onClick = {
-                        navController.navigate(Rutas.pantallaBarman) {
-                            launchSingleTop = true
-                        }
-                    },
+                    onClick = { navController.navigate(Rutas.pantallaBarman) { launchSingleTop = true } },
                     icon = {
                         BadgedBox(badge = {
                             if (numeroComandasPendientes > 0) {
@@ -436,6 +396,12 @@ fun AppBottomBar(
                     },
                     label = { Text("Pendientes") }
                 )
+                NavigationBarItem(
+                    selected = currentRoute == Rutas.pantallaAdminComandas,
+                    onClick = { navController.navigate(Rutas.pantallaAdminComandas) { launchSingleTop = true } },
+                    icon = { Icon(Icons.Default.List, contentDescription = null) },
+                    label = { Text("Historial") }
+                )
             }
         }
 
@@ -443,21 +409,13 @@ fun AppBottomBar(
             NavigationBar {
                 NavigationBarItem(
                     selected = currentRoute == Rutas.pantallaCliente,
-                    onClick = {
-                        navController.navigate(Rutas.pantallaCliente) {
-                            launchSingleTop = true
-                        }
-                    },
+                    onClick = { navController.navigate(Rutas.pantallaCliente) { launchSingleTop = true } },
                     icon = { Icon(Icons.Default.Home, contentDescription = null) },
                     label = { Text("Carta") }
                 )
                 NavigationBarItem(
                     selected = currentRoute == Rutas.pantallaHistorial,
-                    onClick = {
-                        navController.navigate(Rutas.pantallaHistorial) {
-                            launchSingleTop = true
-                        }
-                    },
+                    onClick = { navController.navigate(Rutas.pantallaHistorial) { launchSingleTop = true } },
                     icon = { Icon(Icons.Default.List, contentDescription = null) },
                     label = { Text("Mis pedidos") }
                 )
@@ -468,15 +426,15 @@ fun AppBottomBar(
 
 private fun tituloSegunRuta(ruta: String?): String {
     return when (ruta) {
-        Rutas.pantallaAdminComandas    -> "Comandas"
-        Rutas.pantallaAdminUsuarios    -> "Usuarios"
-        Rutas.pantallaAdminProductos   -> "Productos"
-        Rutas.pantallaCamarero         -> "Camarero"
-        Rutas.pantallaBarman           -> "Barman"
-        Rutas.pantallaCliente          -> "Carta"
-        Rutas.pantallaHistorial        -> "Historial"
-        Rutas.pantallaCrearProducto    -> "Nuevo producto"
-        Rutas.pantallaMapa             -> "Seleccionar ubicación"
-        else                           -> "Restaurante"
+        Rutas.pantallaAdminComandas  -> "Comandas"
+        Rutas.pantallaAdminUsuarios  -> "Usuarios"
+        Rutas.pantallaAdminProductos -> "Productos"
+        Rutas.pantallaCamarero       -> "Camarero"
+        Rutas.pantallaBarman         -> "Barman"
+        Rutas.pantallaCliente        -> "Carta"
+        Rutas.pantallaHistorial      -> "Historial"
+        Rutas.pantallaCrearProducto  -> "Nuevo producto"
+        Rutas.pantallaMapa           -> "Seleccionar ubicación"
+        else                         -> "Restaurante"
     }
 }
