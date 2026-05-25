@@ -37,7 +37,7 @@ fun PantallaRegistro(navController: NavHostController) {
     LaunchedEffect(loginSuccess) {
         if (loginSuccess) {
             Toast.makeText(context, "Registro correcto", Toast.LENGTH_SHORT).show()
-            navController.navigate(Rutas.pantallaCliente)
+            navController.navigate(Rutas.pantallaHome)
         }
     }
 
@@ -145,7 +145,6 @@ fun PantallaRegistro(navController: NavHostController) {
 
                 Button(
                     onClick = {
-
                         if (email.isEmpty() || password.isEmpty() || nombre.isEmpty()) {
                             Toast.makeText(context, "Rellena los campos", Toast.LENGTH_SHORT).show()
                             return@Button
@@ -161,19 +160,13 @@ fun PantallaRegistro(navController: NavHostController) {
                             return@Button
                         }
 
-                        viewModel.registerWithEmail(
-                            email,
-                            password,
-                            nombre,
-                            fotoUrl,
-                            4
-                        )
-
+                        viewModel.registerWithEmail(email, password, nombre, fotoUrl, 4)
                     },
-                    modifier = Modifier.fillMaxWidth()
-                    ,colors = ButtonDefaults.buttonColors(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFF84F19),
-                        contentColor = Color.Black)
+                        contentColor = Color.Black
+                    )
                 ) {
                     Text("Registrarse")
                 }
@@ -181,13 +174,12 @@ fun PantallaRegistro(navController: NavHostController) {
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Button(
-                    onClick = {
-                        navController.popBackStack()
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                    ,colors = ButtonDefaults.buttonColors(
+                    onClick = { navController.popBackStack() },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFF84F19),
-                        contentColor = Color.Black)
+                        contentColor = Color.Black
+                    )
                 ) {
                     Text("Volver")
                 }

@@ -1,12 +1,10 @@
 package com.example.desafiofinalcompose.ItemsCard
 
-import android.widget.Space
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,11 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.desafiofinalcompose.Models.Producto
 import com.example.desafiofinalcompose.Models.ProductoCantidad
-import coil.compose.AsyncImage
 
 @Composable
 fun ItemProducto(
@@ -32,44 +32,71 @@ fun ItemProducto(
     onRemove: (Producto) -> Unit,
     habilitarBotones: Boolean
 ) {
-
     val cantidad = comanda.find { it.nombre == producto.nombre }?.cantidad ?: 0
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
-            .background(Color.Gray),
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .background(Color(0xFF1E1E1E)),
+        verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        AsyncImage(
-            model = producto.foto,
-            contentDescription = null,
-            modifier = Modifier.size(80.dp)
-        )
-        Column() {
-            Spacer(modifier = Modifier.height(15.dp))
-            Text(producto.nombre, color = Color.White)
-            Text("${producto.precio}€", color = Color.White)
+        if (producto.foto.isNotBlank()) {
+            AsyncImage(
+                model = producto.foto,
+                contentDescription = producto.nombre,
+                modifier = Modifier.size(60.dp),
+                contentScale = ContentScale.Crop
+            )
         }
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 8.dp)
+        ) {
+            Text(
+                text = producto.nombre,
+                color = Color.White,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = "${"%.2f".format(producto.precio)} €",
+                color = Color(0xFFF84F19),
+                fontSize = 13.sp
+            )
+        }
 
-            Button(onClick = { onRemove(producto) },
-                enabled = habilitarBotones, colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFF84F19),
-                contentColor = Color.Black,
-            )) {
-                Text("-")
-            }
+        if (habilitarBotones) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Button(
+                    onClick = { onRemove(producto) },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFF84F19),
+                        contentColor = Color.Black
+                    )
+                ) {
+                    Text("-")
+                }
 
-            Text("$cantidad", modifier = Modifier.padding(8.dp),color = Color.White)
+                Text(
+                    text = "$cantidad",
+                    color = Color.White,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
 
-            Button(onClick = { onAdd(producto) },
-                enabled = habilitarBotones, colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFF84F19),
-                contentColor = Color.Black,
-            )) {
-                Text("+")
+                Button(
+                    onClick = { onAdd(producto) },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFF84F19),
+                        contentColor = Color.Black
+                    )
+                ) {
+                    Text("+")
+                }
             }
         }
     }
